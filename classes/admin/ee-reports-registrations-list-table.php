@@ -56,7 +56,7 @@ class EE_Reports_Registrations_List_Table extends WP_List_Table {
 			'TXN_STS_code' => __( 'TXN_STS_code', 'ee-reports' ),
 			'TXN_total' => __( 'TXN_total', 'ee-reports' ),
 			'TXN_paid' => __( 'TXN_paid', 'ee-reports' ),
-			'TXN_total' => __( 'TXN_timestamp', 'ee-reports' ),
+			'TXN_timestamp' => __( 'TXN_timestamp', 'ee-reports' ),
 			'PMD_name' => __( 'PMD_name', 'ee-reports' ),
 			'PAY_txn_id_chq_nmbr' => __( 'PAY_txn_id_chq_nmbr', 'ee-reports' ),
 			'TKT_name' => __( 'TKT_name', 'ee-reports' ),
