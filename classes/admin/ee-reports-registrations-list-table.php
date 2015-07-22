@@ -41,7 +41,7 @@ class EE_Reports_Registrations_List_Table extends WP_List_Table {
 		return date_i18n( get_option( 'date_format' ), strtotime( $item->next_order_date ) );
 	}
 	
-	function get_columns(){
+	function get_columns() {
 		$columns = array(
 			'cb' => '<input type="checkbox" />',
 			'EVT_title'  => __( 'Event', 'ee-reports' ),
@@ -52,8 +52,17 @@ class EE_Reports_Registrations_List_Table extends WP_List_Table {
 			'REG_code' => __( 'REG_code', 'ee-reports' ),
 			'REG_count' => __( 'REG_count', 'ee-reports' ),
 			'REG_final_price' => __( 'REG_final_price', 'ee-reports' ),
-			'STS_code' => __( 'STS_code', 'ee-reports' ),
-			'REG_paid' => __( 'REG_paid', 'ee-reports' ),
+			'REG_STS_code' => __( 'REG_STS_code', 'ee-reports' ),
+			'TXN_STS_code' => __( 'TXN_STS_code', 'ee-reports' ),
+			'TXN_total' => __( 'TXN_total', 'ee-reports' ),
+			'TXN_paid' => __( 'TXN_paid', 'ee-reports' ),
+			'TXN_total' => __( 'TXN_timestamp', 'ee-reports' ),
+			'PMD_name' => __( 'PMD_name', 'ee-reports' ),
+			'PAY_txn_id_chq_nmbr' => __( 'PAY_txn_id_chq_nmbr', 'ee-reports' ),
+			'TKT_name' => __( 'TKT_name', 'ee-reports' ),
+			'TKT_uses' => __( 'TKT_uses', 'ee-reports' ),
+			'TKT_start_date' => __( 'TKT_start_date', 'ee-reports' ),
+			'TKT_end_date' => __( 'TKT_end_date', 'ee-reports' ),
 			'ATT_fname' => __( 'ATT_fname', 'ee-reports' ),
 			'ATT_lname' => __( 'ATT_lname', 'ee-reports' ),
 			'ATT_email' => __( 'ATT_email', 'ee-reports' ),
@@ -63,7 +72,8 @@ class EE_Reports_Registrations_List_Table extends WP_List_Table {
 			'STA_ID' => __( 'STA_ID', 'ee-reports' ),
 			'CNT_ISO' => __( 'CNT_ISO', 'ee-reports' ),
 			'ATT_zip' => __( 'ATT_zip', 'ee-reports' ),
-			'ATT_phone' => __( 'ATT_phone', 'ee-reports' )
+			'ATT_phone' => __( 'ATT_phone', 'ee-reports' ),
+			'PRO_code' => __( 'PRO_code', 'ee-reports' )
 		);
 		return $columns;
 	}
@@ -78,7 +88,8 @@ class EE_Reports_Registrations_List_Table extends WP_List_Table {
 			'REG_code' => array( 'REG_code', false ),
 			'REG_count' => array( 'REG_count', false ),
 			'REG_final_price' => array( 'REG_final_price', false ),
-			'STS_code' => array( 'STS_code', false ),
+			'REG_STS_code' => array( 'REG_STS_code', false ),
+			'TXN_STS_code' => array( 'TXN_STS_code', false ),
 			'REG_paid' => array( 'REG_paid', false ),
 			'ATT_fname' => array( 'ATT_fname', false ),
 			'ATT_lname' => array( 'ATT_lname', false ),
@@ -193,8 +204,17 @@ class EE_Reports_Registrations_List_Table extends WP_List_Table {
 			registrations.REG_code AS `REG_code`,
 			registrations.REG_count AS `REG_count`,
 			registrations.REG_final_price AS `REG_final_price`,
-			statuses.STS_code AS `STS_code`,
-			registrations.REG_paid AS `REG_paid`,
+			reg_statuses.STS_code AS `REG_STS_code`,
+			txn_statuses.STS_code AS `TXN_STS_code`,
+			transactions.TXN_total AS `TXN_total`,
+			transactions.TXN_paid AS `TXN_paid`,
+			transactions.TXN_timestamp AS `TXN_timestamp`,
+			GROUP_CONCAT(payment_methods.PMD_name SEPARATOR ', ') AS `PMD_name`,
+			GROUP_CONCAT(payments.PAY_txn_id_chq_nmbr SEPARATOR ', ') AS `PAY_txn_id_chq_nmbr`,
+			tickets.TKT_name AS `TKT_name`,
+			tickets.TKT_uses AS `TKT_uses`,
+			tickets.TKT_start_date AS `TKT_start_date`,
+			tickets.TKT_end_date AS `TKT_end_date`,
 			attendees.ATT_fname AS `ATT_fname`,
 			attendees.ATT_lname AS `ATT_lname`,
 			attendees.ATT_email AS `ATT_email`,
@@ -204,11 +224,18 @@ class EE_Reports_Registrations_List_Table extends WP_List_Table {
 			attendees.STA_ID AS `STA_ID`,
 			attendees.CNT_ISO AS `CNT_ISO`,
 			attendees.ATT_zip AS `ATT_zip`,
-			attendees.ATT_phone AS `ATT_phone`
+			attendees.ATT_phone AS `ATT_phone`,
+			GROUP_CONCAT(promotions.PRO_code SEPARATOR ', ') AS `PRO_code`
 			FROM {$wpdb->prefix}esp_registration AS registrations
 			LEFT JOIN {$wpdb->prefix}esp_transaction AS transactions ON(transactions.TXN_ID = registrations.TXN_ID)
 			LEFT JOIN {$wpdb->prefix}esp_attendee_meta AS attendees ON(attendees.ATT_ID = registrations.ATT_ID)
-			LEFT JOIN {$wpdb->prefix}esp_status AS statuses ON(statuses.STS_ID = registrations.STS_ID)
+			LEFT JOIN {$wpdb->prefix}esp_ticket AS tickets ON(tickets.TKT_ID = registrations.TKT_ID)
+			LEFT JOIN {$wpdb->prefix}esp_status AS reg_statuses ON(reg_statuses.STS_ID = registrations.STS_ID)
+			LEFT JOIN {$wpdb->prefix}esp_status AS txn_statuses ON(txn_statuses.STS_ID = transactions.STS_ID)
+			LEFT JOIN {$wpdb->prefix}esp_payment AS payments ON(payments.TXN_ID = transactions.TXN_ID)
+			LEFT JOIN {$wpdb->prefix}esp_payment_method AS payment_methods ON(payment_methods.PMD_ID = payments.PMD_ID)
+			LEFT JOIN {$wpdb->prefix}esp_line_item AS line_items ON(line_items.TXN_ID = transactions.TXN_ID AND line_items.LIN_code LIKE 'promotion-%%')
+			LEFT JOIN {$wpdb->prefix}esp_promotion AS promotions ON(CONCAT('promotion-', promotions.PRO_ID) = line_items.LIN_CODE)
 			LEFT JOIN {$wpdb->prefix}posts AS events ON(events.ID = registrations.EVT_ID AND events.post_type = 'espresso_events')
 			WHERE $search_clause
 			GROUP BY registrations.REG_ID
