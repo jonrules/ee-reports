@@ -1,0 +1,8 @@
+.ee-reports-admin-form {
+	width: 100%;
+	overflow-x: scroll;
+}
+
+.ee-reports-admin-form .wp-list-table {
+	width: 3000px;
+}
