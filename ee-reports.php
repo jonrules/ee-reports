@@ -48,3 +48,51 @@ function ee_reports_admin_render_registrations_page() {
 		
 	echo '</div>';
 }
+
+function ajax_export_ee_reports_registrations() {
+	if ( ! user_can( get_current_user_id(), 'manage_options' ) ) {
+		echo "Action not allowed.";
+		die();
+	}
+	require_once( 'classes/admin/ee-reports-registrations-list-table.php' );
+	$list_table = @new EE_Reports_Registrations_List_Table();
+	ee_reports_export_list_table( $list_table, 'registrations.csv' );
+}
+add_action( 'wp_ajax_export_ee_reports_registrations', 'ajax_export_ee_reports_registrations' );
+
+/**
+ * Export list table to CSV
+ * @param EE_Reports_Registrations_List_Table $list_table
+ * @param string $filename
+ */
+function ee_reports_export_list_table( $list_table, $filename ) {
+	header( 'Content-Type: text/csv' );
+	header( 'Content-Disposition: attachment; filename="' . $filename . '"' );
+	$out = fopen( 'php://output', 'r' );
+	
+	// Prepare list table
+	$list_table->prepare_items();
+	// Get items
+	$items = $list_table->items;
+	if ( count( $items ) > 0 ) {
+		// Get columns
+		$columns = $list_table->get_columns();
+		unset( $columns['cb'] );
+		$column_names = array_values( $columns );
+		fputcsv( $out, $column_names );
+		foreach ( $items as $item ) {
+			$row = array();
+			foreach ( $columns as $id => $name ) {
+				$method_name = 'column_' . $id;
+				if ( method_exists( $list_table, $method_name ) ) {
+					$row[] = call_user_func( array( $list_table, $method_name ), $item );
+				} else {
+					$row[] = $list_table->column_default( $item, $id );
+				}
+			}
+			fputcsv( $out, $row );
+		}
+	}
+	fclose( $out );
+	die();
+}

@@ -11,8 +11,17 @@
 	<?php echo $list_table->search_box( 'Search registrations', 'ee-reports-admin-search' ); ?>
 </form>
 
-<p><a href="<?php echo admin_url( '/admin-ajax.php?action=export_ee_reports_registrationss&per_page=999999' ); ?>" 
-	target="_blank" class="button">Export Registrations</a></p>
+<?php 
+$export_url = add_query_arg( array(
+	'action' => 'export_ee_reports_registrations',
+	'per_page' => '999999',
+	's' => isset( $_REQUEST['s'] ) ? $_REQUEST['s'] : '',
+	'orderby' => isset( $_REQUEST['orderby'] ) ? $_REQUEST['orderby'] : '',
+	'order' => isset( $_REQUEST['order'] ) ? $_REQUEST['order'] : ''
+), admin_url( 'admin-ajax.php' ) );
+?>
+<p><a href="<?php echo esc_attr( $export_url ); ?>" 
+	target="_blank" class="button">Export Results</a></p>
 
 <form id="registrations-filter" method="post" class="ee-reports-admin-form">
 	<input type="hidden" name="page" class="ee-reports-admin-page" value="<?php echo esc_attr( $_REQUEST['page'] ); ?>" />

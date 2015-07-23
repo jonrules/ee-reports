@@ -148,8 +148,8 @@ class EE_Reports_Registrations_List_Table extends WP_List_Table {
 		$current_page = $this->get_pagenum();
 		
 
-		$orderby = ( ! empty( $_REQUEST['orderby'] ) ) ? preg_replace( '/[^a-z_]/', '', $_REQUEST['orderby'] ) : 'REG_date';
-		$order = ( ! empty( $_REQUEST['order'] ) ) ? preg_replace( '/[^a-z_]/', '', $_REQUEST['order'] ) : 'DESC';
+		$orderby = ( ! empty( $_REQUEST['orderby'] ) ) ? preg_replace( '/[^A-Za-z_]/', '', $_REQUEST['orderby'] ) : 'REG_date';
+		$order = ( ! empty( $_REQUEST['order'] ) ) ? preg_replace( '/[^A-Za-z_]/', '', $_REQUEST['order'] ) : 'DESC';
 		
 		$search_clause = '1';
 		if ( ! empty( $_REQUEST['s'] ) ) {
