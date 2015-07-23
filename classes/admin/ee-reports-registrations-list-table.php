@@ -27,18 +27,27 @@ class EE_Reports_Registrations_List_Table extends WP_List_Table {
 		);
 	}
 	
-	function column_last_order_date( $item ) {
-		if ( empty( $item->last_order_date ) || $item->last_order_date == '0000-00-00' ) {
-			return '';
-		}
-		return date_i18n( get_option( 'date_format' ), strtotime( $item->last_order_date ) );
+	function column_REG_date( $item ) {
+		return $this->format_date( $item->REG_date );
 	}
 	
-	function column_next_order_date( $item ) {
-		if ( empty( $item->next_order_date ) || $item->next_order_date == '0000-00-00' ) {
+	function column_TXN_timestamp( $item ) {
+		return $this->format_date( $item->TXN_timestamp );
+	}
+	
+	function column_TKT_start_date( $item ) {
+		return $this->format_date( $item->TKT_start_date );
+	}
+	
+	function column_TKT_end_date( $item ) {
+		return $this->format_date( $item->TKT_end_date );
+	}
+	
+	function format_date( $value ) {
+		if ( empty( $value ) || $value == '0000-00-00' ) {
 			return '';
 		}
-		return date_i18n( get_option( 'date_format' ), strtotime( $item->next_order_date ) );
+		return date_i18n( 'M j, Y h:i a', strtotime( $value ) );
 	}
 	
 	function get_columns() {

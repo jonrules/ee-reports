@@ -4,12 +4,12 @@
 
 <h2>Event Espresso Registrations</h2>
 
-<p>Registration information for events.</p>
-
 <form method="get" class="ee-reports-search-form">
 	<input type="hidden" name="page" class="ee-reports--admin-page" value="<?php echo esc_attr( $_REQUEST['page'] ); ?>" />
 	<?php echo $list_table->search_box( 'Search registrations', 'ee-reports-admin-search' ); ?>
 </form>
+
+<p>Registration information for events.</p>
 
 <?php 
 $export_url = add_query_arg( array(
