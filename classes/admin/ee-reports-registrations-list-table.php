@@ -19,14 +19,6 @@ class EE_Reports_Registrations_List_Table extends WP_List_Table {
 		return $item->{$column_name};
 	}
 	
-	function column_cb( $item ) {
-		return sprintf(
-			'<input type="checkbox" name="%1$s[]" value="%2$s" />',
-			$this->_args['singular'],
-			$item->REG_ID
-		);
-	}
-	
 	function column_REG_date( $item ) {
 		return $this->format_date( $item->REG_date );
 	}
@@ -59,7 +51,6 @@ class EE_Reports_Registrations_List_Table extends WP_List_Table {
 // Address Part 1[ATT_address]	Address Part 2[ATT_address2]	City[ATT_city]	State[STA_ID]	Country[CNT_ISO]	
 // ZIP/Postal Code[ATT_zip]	Phone[ATT_phone]	Who are you?
 		$columns = array(
-			'cb' => '<input type="checkbox" />',
 			'EVT_title'  => __( 'Event', 'ee-reports' ),
 			'TXN_ID'  => __( 'Transaction ID', 'ee-reports' ),
 			'ATT_ID' => __( 'Attendee ID', 'ee-reports' ),
@@ -90,6 +81,7 @@ class EE_Reports_Registrations_List_Table extends WP_List_Table {
 			'CNT_ISO' => __( 'Country', 'ee-reports' ),
 			'ATT_zip' => __( 'ZIP/Postal Code', 'ee-reports' ),
 			'ATT_phone' => __( 'Phone', 'ee-reports' ),
+			'ANS_who_are_you' => __( 'Who are you?', 'ee-reports' ),
 			'PRO_code' => __( 'Promo Code', 'ee-reports' )
 		);
 		return $columns;
@@ -207,6 +199,7 @@ class EE_Reports_Registrations_List_Table extends WP_List_Table {
 				LEFT JOIN {$wpdb->prefix}esp_line_item AS line_items ON(line_items.TXN_ID = transactions.TXN_ID AND line_items.LIN_code LIKE 'promotion-%%')
 				LEFT JOIN {$wpdb->prefix}esp_promotion AS promotions ON(CONCAT('promotion-', promotions.PRO_ID) = line_items.LIN_CODE)
 				LEFT JOIN {$wpdb->prefix}posts AS events ON(events.ID = registrations.EVT_ID AND events.post_type = 'espresso_events')
+				LEFT JOIN {$wpdb->prefix}esp_answer AS who_are_you ON(who_are_you.REG_ID = registrations.REG_ID AND who_are_you.QST_ID = 11)
 				WHERE $search_clause
 				GROUP BY registrations.REG_ID"
 			);
@@ -249,6 +242,7 @@ class EE_Reports_Registrations_List_Table extends WP_List_Table {
 			attendees.CNT_ISO AS `CNT_ISO`,
 			attendees.ATT_zip AS `ATT_zip`,
 			attendees.ATT_phone AS `ATT_phone`,
+			who_are_you.ANS_value AS `ANS_who_are_you`,
 			GROUP_CONCAT(promotions.PRO_code SEPARATOR ', ') AS `PRO_code`
 			FROM {$wpdb->prefix}esp_registration AS registrations
 			LEFT JOIN {$wpdb->prefix}esp_transaction AS transactions ON(transactions.TXN_ID = registrations.TXN_ID)
@@ -261,6 +255,7 @@ class EE_Reports_Registrations_List_Table extends WP_List_Table {
 			LEFT JOIN {$wpdb->prefix}esp_line_item AS line_items ON(line_items.TXN_ID = transactions.TXN_ID AND line_items.LIN_code LIKE 'promotion-%%')
 			LEFT JOIN {$wpdb->prefix}esp_promotion AS promotions ON(CONCAT('promotion-', promotions.PRO_ID) = line_items.LIN_CODE)
 			LEFT JOIN {$wpdb->prefix}posts AS events ON(events.ID = registrations.EVT_ID AND events.post_type = 'espresso_events')
+			LEFT JOIN {$wpdb->prefix}esp_answer AS who_are_you ON(who_are_you.REG_ID = registrations.REG_ID AND who_are_you.QST_ID = 11)
 			WHERE $search_clause
 			GROUP BY registrations.REG_ID
 			ORDER BY `{$orderby}` {$order}
