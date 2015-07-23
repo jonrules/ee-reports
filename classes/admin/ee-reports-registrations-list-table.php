@@ -43,13 +43,6 @@ class EE_Reports_Registrations_List_Table extends WP_List_Table {
 	}
 	
 	function get_columns() {
-// Event	Transaction ID[TXN_ID]	Attendee ID[ATT_ID]	Registration ID[REG_ID]	Time registration occurred[REG_date]	
-// Unique Code for this registration[REG_code]	Count of this registration in the group registration [REG_count]	
-// Final Price of registration[REG_final_price]	Currency	Registration Status	Transaction Status	Transaction Amount Due	
-// Amount Paid	Payment Date(s)	Payment Method(s)	Gateway Transaction ID(s)	Check-Ins	
-// Ticket Name	Datetimes of Ticket	First Name[ATT_fname]	Last Name[ATT_lname]	Email Address[ATT_email]	
-// Address Part 1[ATT_address]	Address Part 2[ATT_address2]	City[ATT_city]	State[STA_ID]	Country[CNT_ISO]	
-// ZIP/Postal Code[ATT_zip]	Phone[ATT_phone]	Who are you?
 		$columns = array(
 			'EVT_title'  => __( 'Event', 'ee-reports' ),
 			'TXN_ID'  => __( 'Transaction ID', 'ee-reports' ),
@@ -160,6 +153,7 @@ class EE_Reports_Registrations_List_Table extends WP_List_Table {
 				'registrations.EVT_ID',
 				'registrations.TXN_ID',
 				'registrations.ATT_ID',
+				'registrations.REG_code',
 				'promotions.PRO_code'
 			);
 			foreach ( $exact_match_columns as $name ) {
@@ -187,7 +181,7 @@ class EE_Reports_Registrations_List_Table extends WP_List_Table {
 			 * Include search conditions in total items
 			 */
 			$total_items = (int) $wpdb->get_var( 
-				"SELECT COUNT(*)
+				"SELECT COUNT(*) FROM (SELECT registrations.REG_ID
 				FROM {$wpdb->prefix}esp_registration AS registrations
 				LEFT JOIN {$wpdb->prefix}esp_transaction AS transactions ON(transactions.TXN_ID = registrations.TXN_ID)
 				LEFT JOIN {$wpdb->prefix}esp_attendee_meta AS attendees ON(attendees.ATT_ID = registrations.ATT_ID)
@@ -201,7 +195,7 @@ class EE_Reports_Registrations_List_Table extends WP_List_Table {
 				LEFT JOIN {$wpdb->prefix}posts AS events ON(events.ID = registrations.EVT_ID AND events.post_type = 'espresso_events')
 				LEFT JOIN {$wpdb->prefix}esp_answer AS who_are_you ON(who_are_you.REG_ID = registrations.REG_ID AND who_are_you.QST_ID = 11)
 				WHERE $search_clause
-				GROUP BY registrations.REG_ID"
+				GROUP BY registrations.REG_ID) AS registration_ids"
 			);
 		} else {
 			/*
