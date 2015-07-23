@@ -42,66 +42,56 @@ class EE_Reports_Registrations_List_Table extends WP_List_Table {
 	}
 	
 	function get_columns() {
+// Event	Transaction ID[TXN_ID]	Attendee ID[ATT_ID]	Registration ID[REG_ID]	Time registration occurred[REG_date]	
+// Unique Code for this registration[REG_code]	Count of this registration in the group registration [REG_count]	
+// Final Price of registration[REG_final_price]	Currency	Registration Status	Transaction Status	Transaction Amount Due	
+// Amount Paid	Payment Date(s)	Payment Method(s)	Gateway Transaction ID(s)	Check-Ins	
+// Ticket Name	Datetimes of Ticket	First Name[ATT_fname]	Last Name[ATT_lname]	Email Address[ATT_email]	
+// Address Part 1[ATT_address]	Address Part 2[ATT_address2]	City[ATT_city]	State[STA_ID]	Country[CNT_ISO]	
+// ZIP/Postal Code[ATT_zip]	Phone[ATT_phone]	Who are you?
 		$columns = array(
 			'cb' => '<input type="checkbox" />',
 			'EVT_title'  => __( 'Event', 'ee-reports' ),
-			'REG_ID'  => __( 'REG_ID', 'ee-reports' ),
-			'EVT_ID' => __( 'EVT_ID', 'ee-reports' ),
-			'ATT_ID' => __( 'ATT_ID', 'ee-reports' ),
-			'REG_date' => __( 'REG_date', 'ee-reports' ),
-			'REG_code' => __( 'REG_code', 'ee-reports' ),
-			'REG_count' => __( 'REG_count', 'ee-reports' ),
-			'REG_final_price' => __( 'REG_final_price', 'ee-reports' ),
-			'REG_STS_code' => __( 'REG_STS_code', 'ee-reports' ),
-			'TXN_STS_code' => __( 'TXN_STS_code', 'ee-reports' ),
-			'TXN_total' => __( 'TXN_total', 'ee-reports' ),
-			'TXN_paid' => __( 'TXN_paid', 'ee-reports' ),
-			'TXN_timestamp' => __( 'TXN_timestamp', 'ee-reports' ),
-			'PMD_name' => __( 'PMD_name', 'ee-reports' ),
-			'PAY_txn_id_chq_nmbr' => __( 'PAY_txn_id_chq_nmbr', 'ee-reports' ),
-			'TKT_name' => __( 'TKT_name', 'ee-reports' ),
-			'TKT_uses' => __( 'TKT_uses', 'ee-reports' ),
-			'TKT_start_date' => __( 'TKT_start_date', 'ee-reports' ),
-			'TKT_end_date' => __( 'TKT_end_date', 'ee-reports' ),
-			'ATT_fname' => __( 'ATT_fname', 'ee-reports' ),
-			'ATT_lname' => __( 'ATT_lname', 'ee-reports' ),
-			'ATT_email' => __( 'ATT_email', 'ee-reports' ),
-			'ATT_address' => __( 'ATT_address', 'ee-reports' ),
-			'ATT_address2' => __( 'ATT_address2', 'ee-reports' ),
-			'ATT_city' => __( 'ATT_city', 'ee-reports' ),
-			'STA_ID' => __( 'STA_ID', 'ee-reports' ),
-			'CNT_ISO' => __( 'CNT_ISO', 'ee-reports' ),
-			'ATT_zip' => __( 'ATT_zip', 'ee-reports' ),
-			'ATT_phone' => __( 'ATT_phone', 'ee-reports' ),
-			'PRO_code' => __( 'PRO_code', 'ee-reports' )
+			'TXN_ID'  => __( 'Transaction ID', 'ee-reports' ),
+			'ATT_ID' => __( 'Attendee ID', 'ee-reports' ),
+			'REG_ID'  => __( 'Registration ID', 'ee-reports' ),
+			'EVT_ID' => __( 'Event ID', 'ee-reports' ),
+			'REG_date' => __( 'Time registration occurred', 'ee-reports' ),
+			'REG_code' => __( 'Unique Code for this registration', 'ee-reports' ),
+			'REG_count' => __( 'Count of this registration in the group registration', 'ee-reports' ),
+			'REG_final_price' => __( 'Final Price of registration', 'ee-reports' ),
+			'REG_STS_code' => __( 'Registration Status', 'ee-reports' ),
+			'TXN_STS_code' => __( 'Transaction Status', 'ee-reports' ),
+			'TXN_total' => __( 'Transaction Amount Due', 'ee-reports' ),
+			'TXN_paid' => __( 'Amount Paid', 'ee-reports' ),
+			'TXN_timestamp' => __( 'Payment Date', 'ee-reports' ),
+			'PMD_name' => __( 'Payment Method(s)', 'ee-reports' ),
+			'PAY_txn_id_chq_nmbr' => __( 'Gateway Transaction ID(s)', 'ee-reports' ),
+			'TKT_uses' => __( 'Check-Ins', 'ee-reports' ),
+			'TKT_name' => __( 'Ticket Name', 'ee-reports' ),
+			'TKT_start_date' => __( 'Ticket Start Date', 'ee-reports' ),
+			'TKT_end_date' => __( 'Ticket End Date', 'ee-reports' ),
+			'ATT_fname' => __( 'First Name', 'ee-reports' ),
+			'ATT_lname' => __( 'Last Name', 'ee-reports' ),
+			'ATT_email' => __( 'Email Address', 'ee-reports' ),
+			'ATT_address' => __( 'Address Part 1', 'ee-reports' ),
+			'ATT_address2' => __( 'Address Part 2', 'ee-reports' ),
+			'ATT_city' => __( 'City', 'ee-reports' ),
+			'STA_ID' => __( 'State', 'ee-reports' ),
+			'CNT_ISO' => __( 'Country', 'ee-reports' ),
+			'ATT_zip' => __( 'ZIP/Postal Code', 'ee-reports' ),
+			'ATT_phone' => __( 'Phone', 'ee-reports' ),
+			'PRO_code' => __( 'Promo Code', 'ee-reports' )
 		);
 		return $columns;
 	}
 	
 	function get_sortable_columns() {
-		$sortable_columns = array(
-			'EVT_title' => array( 'EVT_title', false ),
-			'REG_ID' => array( 'REG_ID', false ),
-			'EVT_ID' => array( 'EVT_ID', false ),
-			'ATT_ID' => array( 'ATT_ID', false ),
-			'REG_date' => array( 'REG_date', false ),
-			'REG_code' => array( 'REG_code', false ),
-			'REG_count' => array( 'REG_count', false ),
-			'REG_final_price' => array( 'REG_final_price', false ),
-			'REG_STS_code' => array( 'REG_STS_code', false ),
-			'TXN_STS_code' => array( 'TXN_STS_code', false ),
-			'REG_paid' => array( 'REG_paid', false ),
-			'ATT_fname' => array( 'ATT_fname', false ),
-			'ATT_lname' => array( 'ATT_lname', false ),
-			'ATT_email' => array( 'ATT_email', false ),
-			'ATT_address' => array( 'ATT_address', false ),
-			'ATT_address2' => array( 'ATT_address2', false ),
-			'ATT_city' => array( 'ATT_city', false ),
-			'STA_ID' => array( 'STA_ID', false ),
-			'CNT_ISO' => array( 'CNT_ISO', false ),
-			'ATT_zip' => array( 'ATT_zip', false ),
-			'ATT_phone' => array( 'ATT_phone', false )
-		);
+		$sortable_columns = array();
+		$columns = $this->get_columns();
+		foreach ( $columns as $id => $name ) {
+			$sortable_columns[ $id ] = array( $id, false );
+		}
 		return $sortable_columns;
 	}
 	
@@ -164,16 +154,30 @@ class EE_Reports_Registrations_List_Table extends WP_List_Table {
 		$search_clause = '1';
 		if ( ! empty( $_REQUEST['s'] ) ) {
 			$safe_search = addslashes( stripslashes( $_REQUEST['s'] ) );
-			$conditions = array(
-				sprintf( 'customers.id = \'%s\'', $safe_search )
+			$exact_match_columns = array(
+				'registrations.REG_ID',
+				'registrations.EVT_ID',
+				'registrations.TXN_ID',
+				'registrations.ATT_ID',
+				'promotions.PRO_code'
 			);
-			$columns = array( 
-				'users.user_login', 
-				'users.user_email', 
-				'meta_last_name.meta_value',
-				'meta_first_name.meta_value'
+			foreach ( $exact_match_columns as $name ) {
+				$conditions[] = sprintf( '%s = \'%s\'', $name, $safe_search );
+			}
+			$partial_match_columns = array( 
+				'events.post_title',
+				'attendees.ATT_fname',
+				'attendees.ATT_lname',
+				'attendees.ATT_email',
+				'attendees.ATT_address',
+				'attendees.ATT_address2',
+				'attendees.ATT_city',
+				'attendees.STA_ID',
+				'attendees.CNT_ISO',
+				'attendees.ATT_zip',
+				'attendees.ATT_phone'
 			);
-			foreach ( $columns as $name ) {
+			foreach ( $partial_match_columns as $name ) {
 				$conditions[] = sprintf( '%s LIKE \'%%%%%s%%%%\'', $name, $safe_search );
 			}
 			$search_clause = '(' . implode( ' OR ', $conditions ) . ')';
@@ -183,8 +187,19 @@ class EE_Reports_Registrations_List_Table extends WP_List_Table {
 			 */
 			$total_items = (int) $wpdb->get_var( 
 				"SELECT COUNT(*)
-				FROM {$wpdb->prefix}esp_registration
-				WHERE $search_clause"
+				FROM {$wpdb->prefix}esp_registration AS registrations
+				LEFT JOIN {$wpdb->prefix}esp_transaction AS transactions ON(transactions.TXN_ID = registrations.TXN_ID)
+				LEFT JOIN {$wpdb->prefix}esp_attendee_meta AS attendees ON(attendees.ATT_ID = registrations.ATT_ID)
+				LEFT JOIN {$wpdb->prefix}esp_ticket AS tickets ON(tickets.TKT_ID = registrations.TKT_ID)
+				LEFT JOIN {$wpdb->prefix}esp_status AS reg_statuses ON(reg_statuses.STS_ID = registrations.STS_ID)
+				LEFT JOIN {$wpdb->prefix}esp_status AS txn_statuses ON(txn_statuses.STS_ID = transactions.STS_ID)
+				LEFT JOIN {$wpdb->prefix}esp_payment AS payments ON(payments.TXN_ID = transactions.TXN_ID)
+				LEFT JOIN {$wpdb->prefix}esp_payment_method AS payment_methods ON(payment_methods.PMD_ID = payments.PMD_ID)
+				LEFT JOIN {$wpdb->prefix}esp_line_item AS line_items ON(line_items.TXN_ID = transactions.TXN_ID AND line_items.LIN_code LIKE 'promotion-%%')
+				LEFT JOIN {$wpdb->prefix}esp_promotion AS promotions ON(CONCAT('promotion-', promotions.PRO_ID) = line_items.LIN_CODE)
+				LEFT JOIN {$wpdb->prefix}posts AS events ON(events.ID = registrations.EVT_ID AND events.post_type = 'espresso_events')
+				WHERE $search_clause
+				GROUP BY registrations.REG_ID"
 			);
 		} else {
 			/*
