@@ -4,6 +4,12 @@ if ( ! class_exists( 'WP_List_Table' ) ) {
 }
 
 class EE_Reports_Registrations_List_Table extends WP_List_Table {
+	/**
+	 * Result set of all events
+	 * @var array
+	 */
+	public $events;
+	
 	public function __construct() {
 		global $status, $page;
 	
@@ -141,7 +147,28 @@ class EE_Reports_Registrations_List_Table extends WP_List_Table {
 		 */
 		$current_page = $this->get_pagenum();
 		
+		/**
+		 * Events
+		 */
+		$this->events = $wpdb->get_results(
+			"SELECT events.ID AS `id`, events.post_title AS `name`, events.post_date AS `post_date`
+			FROM {$wpdb->prefix}posts AS events
+			WHERE events.post_type = 'espresso_events'
+			ORDER BY post_date DESC"
+		);
+		$event = ( ! empty( $_REQUEST['event'] ) ) ? $_REQUEST['event'] : '';
+		$events_filter = '1';
+		if ( ! empty( $event ) ) {
+			if ( $event != 'all' ) {
+				$events_filter = sprintf( 'events.ID = %d', $event );
+			}
+		} elseif ( isset( $this->events[0] ) ) {
+			$events_filter = sprintf( 'events.ID = %d', $this->events[0]->id );
+		}
 
+		/**
+		 * Order
+		 */
 		$orderby = ( ! empty( $_REQUEST['orderby'] ) ) ? preg_replace( '/[^A-Za-z_]/', '', $_REQUEST['orderby'] ) : 'REG_date';
 		$order = ( ! empty( $_REQUEST['order'] ) ) ? preg_replace( '/[^A-Za-z_]/', '', $_REQUEST['order'] ) : 'DESC';
 		
@@ -194,14 +221,19 @@ class EE_Reports_Registrations_List_Table extends WP_List_Table {
 				LEFT JOIN {$wpdb->prefix}esp_promotion AS promotions ON(CONCAT('promotion-', promotions.PRO_ID) = line_items.LIN_CODE)
 				LEFT JOIN {$wpdb->prefix}posts AS events ON(events.ID = registrations.EVT_ID AND events.post_type = 'espresso_events')
 				LEFT JOIN {$wpdb->prefix}esp_answer AS who_are_you ON(who_are_you.REG_ID = registrations.REG_ID AND who_are_you.QST_ID = 11)
-				WHERE $search_clause
+				WHERE $search_clause AND $events_filter
 				GROUP BY registrations.REG_ID) AS registration_ids"
 			);
 		} else {
 			/*
 			 * Total items
 			 */
-			$total_items = (int) $wpdb->get_var( "SELECT COUNT(*) FROM {$wpdb->prefix}esp_registration" );
+			$total_items = (int) $wpdb->get_var( 
+				"SELECT COUNT(*) 
+				FROM {$wpdb->prefix}esp_registration AS registrations
+				LEFT JOIN {$wpdb->prefix}posts AS events ON(events.ID = registrations.EVT_ID AND events.post_type = 'espresso_events')
+				WHERE $events_filter"
+			);
 		}
 		
 		
@@ -250,7 +282,7 @@ class EE_Reports_Registrations_List_Table extends WP_List_Table {
 			LEFT JOIN {$wpdb->prefix}esp_promotion AS promotions ON(CONCAT('promotion-', promotions.PRO_ID) = line_items.LIN_CODE)
 			LEFT JOIN {$wpdb->prefix}posts AS events ON(events.ID = registrations.EVT_ID AND events.post_type = 'espresso_events')
 			LEFT JOIN {$wpdb->prefix}esp_answer AS who_are_you ON(who_are_you.REG_ID = registrations.REG_ID AND who_are_you.QST_ID = 11)
-			WHERE $search_clause
+			WHERE $search_clause AND $events_filter
 			GROUP BY registrations.REG_ID
 			ORDER BY `{$orderby}` {$order}
 			LIMIT %d, %d",

@@ -3,13 +3,13 @@
 Plugin Name: Event Espresso Reports
 Plugin URI: http://patternsinthecloud.com
 Description: Adds new reports for Event Espresso
-Version: 1.0.0
+Version: 1.0.1
 Author: Patterns in the Cloud
 Author URI: http://patternsinthecloud.com
 License: Single-site
 */
 
-define( 'EE_REPORTS_VERSION', '1.0.0' );
+define( 'EE_REPORTS_VERSION', '1.0.1' );
 
 function ee_reports_install() {
 
