@@ -221,7 +221,7 @@ class EE_Reports_Registrations_List_Table extends WP_List_Table {
 				LEFT JOIN {$wpdb->prefix}esp_promotion AS promotions ON(CONCAT('promotion-', promotions.PRO_ID) = line_items.LIN_CODE)
 				LEFT JOIN {$wpdb->prefix}posts AS events ON(events.ID = registrations.EVT_ID AND events.post_type = 'espresso_events')
 				LEFT JOIN {$wpdb->prefix}esp_answer AS who_are_you ON(who_are_you.REG_ID = registrations.REG_ID AND who_are_you.QST_ID = 11)
-				WHERE $search_clause AND $events_filter
+				WHERE $events_filter AND $search_clause
 				GROUP BY registrations.REG_ID) AS registration_ids"
 			);
 		} else {
@@ -282,7 +282,7 @@ class EE_Reports_Registrations_List_Table extends WP_List_Table {
 			LEFT JOIN {$wpdb->prefix}esp_promotion AS promotions ON(CONCAT('promotion-', promotions.PRO_ID) = line_items.LIN_CODE)
 			LEFT JOIN {$wpdb->prefix}posts AS events ON(events.ID = registrations.EVT_ID AND events.post_type = 'espresso_events')
 			LEFT JOIN {$wpdb->prefix}esp_answer AS who_are_you ON(who_are_you.REG_ID = registrations.REG_ID AND who_are_you.QST_ID = 11)
-			WHERE $search_clause AND $events_filter
+			WHERE $events_filter AND $search_clause
 			GROUP BY registrations.REG_ID
 			ORDER BY `{$orderby}` {$order}
 			LIMIT %d, %d",
