@@ -18,7 +18,8 @@ $export_url = add_query_arg( array(
 	'per_page' => '999999',
 	's' => isset( $_REQUEST['s'] ) ? $_REQUEST['s'] : '',
 	'orderby' => isset( $_REQUEST['orderby'] ) ? $_REQUEST['orderby'] : '',
-	'order' => isset( $_REQUEST['order'] ) ? $_REQUEST['order'] : ''
+	'order' => isset( $_REQUEST['order'] ) ? $_REQUEST['order'] : '',
+	'event' => isset( $_REQUEST['event'] ) ? $_REQUEST['event']: ''
 ), admin_url( 'admin-ajax.php' ) );
 ?>
 <p><a href="<?php echo esc_attr( $export_url ); ?>" 
